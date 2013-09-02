@@ -32,7 +32,9 @@ return array(
 	),
 	'install' => array(
 		'rdf' => array(
-			dirname(__FILE__). '/models/ontology/wftest.rdf'
+			dirname(__FILE__). '/models/ontology/aclrole.rdf',
+		    dirname(__FILE__). '/models/ontology/wftest.rdf',
+		    dirname(__FILE__). '/models/ontology/itemContainer.rdf'
 		)
 	),
 	'constants' => array(
