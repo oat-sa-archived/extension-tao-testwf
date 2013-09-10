@@ -138,8 +138,6 @@ class taoWfTest_models_classes_WfTestService extends taoTests_models_classes_Tes
      */
     public function getTestItems(core_kernel_classes_Resource $test)
     {
-        $returnValue = array();
-        
         $items = array();
         $processService = wfEngine_models_classes_ProcessDefinitionService::singleton();
         
@@ -195,9 +193,7 @@ class taoWfTest_models_classes_WfTestService extends taoTests_models_classes_Tes
             }
         }
         
-        $returnValue = $items;
-        
-        return (array) $returnValue;
+        return $items;
     }
 
     /**
