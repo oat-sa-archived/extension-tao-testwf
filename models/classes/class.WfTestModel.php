@@ -134,12 +134,4 @@ class taoWfTest_models_classes_WfTestModel
     public function getCompiler(core_kernel_classes_Resource $test) {
         return new taoWfTest_models_classes_WfTestCompiler($test);
     }
-    
-    /**
-     * (non-PHPdoc)
-     * @see taoTests_models_classes_TestModel::compile()
-     */
-    public function compile( core_kernel_classes_Resource $test, core_kernel_file_File $destinationDirectory, core_kernel_classes_Resource $resultServer) {
-        return taoWfTest_models_classes_WfTestCompiler::singleton()->compile($test, $destinationDirectory, $resultServer);
-    }
 }
