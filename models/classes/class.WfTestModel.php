@@ -131,6 +131,10 @@ class taoWfTest_models_classes_WfTestModel
     	$process->setLabel("Process ".$test->getLabel());
     }
     
+    public function getCompiler(core_kernel_classes_Resource $test) {
+        return new taoWfTest_models_classes_WfTestCompiler($test);
+    }
+    
     /**
      * (non-PHPdoc)
      * @see taoTests_models_classes_TestModel::compile()
