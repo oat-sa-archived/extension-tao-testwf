@@ -66,7 +66,6 @@ class taoWfTest_models_classes_WfTestCompiler extends tao_models_classes_Compile
                     $activity->removePropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITIES_INTERACTIVESERVICES), $service);
                     // add new service
                     $activity->setPropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITIES_INTERACTIVESERVICES), $newService);
-                    wfEngine_models_classes_InteractiveServiceService::singleton()->deleteInteractiveService($service);
                 }
                 // todo if process called, flatten
             }
