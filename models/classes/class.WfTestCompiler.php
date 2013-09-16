@@ -61,7 +61,10 @@ class taoWfTest_models_classes_WfTestCompiler extends tao_models_classes_Compile
                 $serviceDefinition = $service->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_CALLOFSERVICES_SERVICEDEFINITION));
                 if ($serviceDefinition->getUri() == INSTANCE_ITEMCONTAINER_SERVICE) {
                     $newService = $this->getItemRunnerService($service, $destinationDirectory);
+                    // remove old service
+                    wfEngine_models_classes_InteractiveServiceService::singleton()->deleteInteractiveService($service);
                     $activity->removePropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITIES_INTERACTIVESERVICES), $service);
+                    // add new service
                     $activity->setPropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITIES_INTERACTIVESERVICES), $newService);
                     wfEngine_models_classes_InteractiveServiceService::singleton()->deleteInteractiveService($service);
                 }
