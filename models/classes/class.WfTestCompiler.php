@@ -79,6 +79,6 @@ class taoWfTest_models_classes_WfTestCompiler extends tao_models_classes_Compile
         
         $compiler = taoItems_models_classes_ItemsService::singleton()->getCompiler($item);
         $callService = $compiler->compile($itemDirectory);
-        return $callService->serialize();
+        return $callService->toOntology();
     }
 }

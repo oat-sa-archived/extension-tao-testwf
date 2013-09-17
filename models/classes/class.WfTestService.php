@@ -250,8 +250,8 @@ class taoWfTest_models_classes_WfTestService extends taoTests_models_classes_Tes
             
             // get the item runner service definition: must exists!
             $itemRunnerServiceDefinition = new core_kernel_classes_Resource(INSTANCE_ITEMCONTAINER_SERVICE);
-            if (! $itemRunnerServiceDefinition->hasType(new core_kernel_classes_Class(CLASS_SUPPORTSERVICES))) {
-                throw new Exception('required  service definition item runner does not exists, reinstall tao is required');
+            if (! $itemRunnerServiceDefinition->exists()) {
+                throw new common_exception_InconsistentData('required service definition item runner does not exists');
             }
             
             // create a call of service and associate the service definition to it:
