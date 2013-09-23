@@ -75,6 +75,9 @@ class taoWfTest_models_classes_WfTestCompiler extends tao_models_classes_Compile
     protected function getItemRunnerService(core_kernel_classes_Resource $service, core_kernel_file_File $destinationDirectory)
     {
         $item = taoWfTest_models_classes_WfTestService::singleton()->getItemByService($service);
+        if (is_null($item)) {
+            throw new taoWfTest_models_classes_MalformedServiceCall($service, 'No valid item found for service '.$service->getUri());
+        }
         $itemDirectory = $this->createSubDirectory($destinationDirectory, $item);
         
         $compiler = taoItems_models_classes_ItemsService::singleton()->getCompiler($item);
