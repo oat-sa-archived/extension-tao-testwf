@@ -35,6 +35,7 @@ class taoWfTest_models_classes_WfTestModel
 	 * @see taoTests_models_classes_TestModel::__construct()
 	 */
 	public function __construct() {
+	    common_ext_ExtensionsManager::singleton()->getExtensionById('taoWfTest'); // loads the extension
 	}
 	
 	/**
