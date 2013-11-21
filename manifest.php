@@ -32,11 +32,16 @@ return array(
 	),
 	'install' => array(
 		'rdf' => array(
-			dirname(__FILE__). '/models/ontology/aclrole.rdf',
 		    dirname(__FILE__). '/models/ontology/wftest.rdf',
 		    dirname(__FILE__). '/models/ontology/itemContainer.rdf'
 		)
 	),
+    'managementRole' => 'http://www.tao.lu/Ontologies/TAOTest.rdf#WfTestManagerRole',
+    'acl' => array(
+        array('grant', 'http://www.tao.lu/Ontologies/TAOTest.rdf#WfTestManagerRole', array('ext'=>'taoWfTest')),
+        array('grant', 'http://www.tao.lu/Ontologies/TAOItem.rdf#ItemsManagerRole', array('ext'=>'taoWfTest', 'mod' => 'Authoring')),
+        array('grant', 'http://www.tao.lu/Ontologies/TAO.rdf#DeliveryRole', array('ext'=>'wfEngine', 'mod' => 'ProcessRunner'))
+    ),
 	'constants' => array(
 		# actions directory
 		"DIR_ACTIONS"			=> $extpath."actions".DIRECTORY_SEPARATOR,
