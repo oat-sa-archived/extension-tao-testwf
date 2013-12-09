@@ -19,7 +19,7 @@
  * 
  */
 
-require_once dirname(__FILE__) . '/../../tao/test/TaoTestRunner.php';
+require_once dirname(__FILE__) . '/../../tao/test/TaoPhpUnitTestRunner.php';
 include_once dirname(__FILE__) . '/../includes/raw_start.php';
 
 /**
@@ -28,7 +28,7 @@ include_once dirname(__FILE__) . '/../includes/raw_start.php';
  * @package taoTests
  * @subpackage test
  */
-class AuthoringTestCase extends UnitTestCase {
+class AuthoringTestCase extends TaoPhpUnitTestRunner {
 	
 	/**
 	 * 
@@ -40,7 +40,8 @@ class AuthoringTestCase extends UnitTestCase {
 	 * tests initialization
 	 */
 	public function setUp(){		
-		TaoTestRunner::initTest();
+		TaoPhpUnitTestRunner::initTest();
+		$this->testsService = taoTests_models_classes_TestsService::singleton();
 	}
 	
 	/**
@@ -50,11 +51,10 @@ class AuthoringTestCase extends UnitTestCase {
 	 */
 	public function testService(){
 		
-		$testsService = taoTests_models_classes_TestsService::singleton();
-		$this->assertIsA($testsService, 'tao_models_classes_Service');
-		$this->assertIsA($testsService, 'taoTests_models_classes_TestsService');
-		
-		$this->testsService = $testsService;
+
+		$this->assertIsA($this->testsService, 'tao_models_classes_Service');
+		$this->assertIsA($this->testsService, 'taoTests_models_classes_TestsService');
+
 	}
 	
 	/**
