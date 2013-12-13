@@ -26,14 +26,11 @@
  * @package taoDelivery
  * @subpackage models_classes
  */
-class taoWfTest_models_classes_WfTestCompiler extends tao_models_classes_Compiler
+class taoWfTest_models_classes_WfTestCompiler extends taoTests_models_classes_TestCompiler
 {
-    public function __construct(core_kernel_classes_Resource $test) {
-        parent::__construct($test);
+    public function compile() {
+        
         common_ext_ExtensionsManager::singleton()->getExtensionById('taoWfTest'); // loads the extension
-    }
-	
-    public function compile(core_kernel_file_File $destinationDirectory) {
         
         $test = $this->getResource();
         common_Logger::i('Compiling test ' . $test->getLabel().' items');
@@ -41,7 +38,7 @@ class taoWfTest_models_classes_WfTestCompiler extends tao_models_classes_Compile
         $processCloner = new wfAuthoring_models_classes_ProcessCloner();
         $processClone = $processCloner->cloneProcess($process);
         
-        $this->process($processClone, $destinationDirectory);
+        $this->process($processClone);
         
         $serviceCall = new tao_models_classes_service_ServiceCall(new core_kernel_classes_Resource(INSTANCE_SERVICE_PROCESSRUNNER));
         $param = new tao_models_classes_service_ConstantParameter(
@@ -52,7 +49,7 @@ class taoWfTest_models_classes_WfTestCompiler extends tao_models_classes_Compile
         return $serviceCall;
     }
     
-    protected function process(core_kernel_classes_Resource $processDefinition, core_kernel_file_File $destinationDirectory)
+    protected function process(core_kernel_classes_Resource $processDefinition)
     {
         $activities = wfEngine_models_classes_ProcessDefinitionService::singleton()->getAllActivities($processDefinition);
         foreach ($activities as $activity) {
@@ -60,7 +57,7 @@ class taoWfTest_models_classes_WfTestCompiler extends tao_models_classes_Compile
             foreach ($services as $service) {
                 $serviceDefinition = $service->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_CALLOFSERVICES_SERVICEDEFINITION));
                 if ($serviceDefinition->getUri() == INSTANCE_ITEMCONTAINER_SERVICE) {
-                    $newService = $this->getItemRunnerService($service, $destinationDirectory);
+                    $newService = $this->getItemRunnerService($service);
                     // remove old service
                     wfEngine_models_classes_InteractiveServiceService::singleton()->deleteInteractiveService($service);
                     $activity->removePropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITIES_INTERACTIVESERVICES), $service);
@@ -72,16 +69,13 @@ class taoWfTest_models_classes_WfTestCompiler extends tao_models_classes_Compile
         }
     }
     
-    protected function getItemRunnerService(core_kernel_classes_Resource $service, core_kernel_file_File $destinationDirectory)
+    protected function getItemRunnerService(core_kernel_classes_Resource $service)
     {
         $item = taoWfTest_models_classes_WfTestService::singleton()->getItemByService($service);
         if (is_null($item)) {
             throw new taoWfTest_models_classes_MalformedServiceCall($service, 'No valid item found for service '.$service->getUri());
         }
-        $itemDirectory = $this->createSubDirectory($destinationDirectory, $item);
-        
-        $compiler = taoItems_models_classes_ItemsService::singleton()->getCompiler($item);
-        $callService = $compiler->compile($itemDirectory);
+        $callService = $this->subCompile($item);
         return $callService->toOntology();
     }
 }
