@@ -1,8 +1,8 @@
 /* auto generated content */
-/* lang: ru-RU */
+/* lang: id-ID */
 define(function(){
  return {
-   langCode : 'ru-RU',
+   langCode : 'id-ID',
    i18n_tr : []
  };
 });

@@ -1,8 +1,8 @@
 /* auto generated content */
-/* lang: ru-RU */
+/* lang: zh-SG */
 define(function(){
  return {
-   langCode : 'ru-RU',
+   langCode : 'zh-SG',
    i18n_tr : []
  };
 });
