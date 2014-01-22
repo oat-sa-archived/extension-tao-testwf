@@ -24,7 +24,8 @@ $taopath = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'tao'.DIRECTORY_SEPARA
 return array(
 	'name' => 'taoWfTest',
 	'description' => 'TAO Workflow Test definition',
-	'version' => '2.5',
+    'license' => 'GPL-2.0',
+    'version' => '2.5',
 	'author' => 'Open Assessment Technologies',
 	'dependencies' => array('taoTests', 'wfEngine'),
 	'models' => array(
