@@ -23,7 +23,7 @@
  *
  * @author Joel Bout, <joel@taotesting.com>
  * @package taoTests
- * @subpackage actions
+ 
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */

@@ -24,7 +24,7 @@
  * @access public
  * @author Joel Bout, <joel@taotesting.com>
  * @package taoDelivery
- * @subpackage models_classes
+ 
  */
 class taoWfTest_models_classes_WfTestCompiler extends taoTests_models_classes_TestCompiler
 {

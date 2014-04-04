@@ -25,7 +25,7 @@
  * @access public
  * @author Joel Bout, <joel.bout@tudor.lu>
  * @package taoTests
- * @subpackage models_classes
+ 
  */
 class taoWfTest_models_classes_WfTestService extends taoTests_models_classes_TestsService
 {

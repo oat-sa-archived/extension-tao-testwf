@@ -24,7 +24,7 @@
  * @access public
  * @author Joel Bout, <joel@taotesting.com>
  * @package taoWfTest
- * @subpackage models_classes
+ 
  */
 class taoWfTest_models_classes_MalformedServiceCall
     extends taoDelivery_models_classes_CompilationFailedException
