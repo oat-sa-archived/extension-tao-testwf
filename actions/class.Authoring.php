@@ -61,24 +61,22 @@ class taoWfTest_actions_Authoring extends tao_actions_SaSModule {
 		$saved = false;
 
 		$items = array();
-		foreach($this->getRequestParameters() as $key => $value){
-			if(preg_match("/^instance_/", $key)){
-				$item = new core_kernel_classes_Resource(tao_helpers_Uri::decode($value));
-				$itemModel = $item->getOnePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
-				$supported = false;
-				if (!is_null($itemModel)) {
-					foreach ($itemModel->getPropertyValues(new core_kernel_classes_Property(TAO_ITEM_MODELTARGET_PROPERTY)) as $targeturi) {
-						if ($targeturi == TAO_ITEM_ONLINE_TARGET) {
-							$supported = true;
-							break;
-						}
+		foreach(tao_helpers_form_GenerisTreeForm::getSelectedInstancesFromPost() as $uri){
+			$item = new core_kernel_classes_Resource($uri);
+			$itemModel = $item->getOnePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
+			$supported = false;
+			if (!is_null($itemModel)) {
+				foreach ($itemModel->getPropertyValues(new core_kernel_classes_Property(TAO_ITEM_MODELTARGET_PROPERTY)) as $targeturi) {
+					if ($targeturi == TAO_ITEM_ONLINE_TARGET) {
+						$supported = true;
+						break;
 					}
 				}
-				if ($supported) {
-					array_push($items, $item);
-				} else {
-					throw new common_Exception($item->getLabel().' cannot be added to a test');
-				}
+			}
+			if ($supported) {
+				array_push($items, $item);
+			} else {
+				throw new common_Exception($item->getLabel().' cannot be added to a test');
 			}
 		}
 		if($this->service->setTestItems($this->getCurrentInstance(), $items)){
@@ -88,4 +86,3 @@ class taoWfTest_actions_Authoring extends tao_actions_SaSModule {
 	}
 
 }
-?>

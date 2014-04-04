@@ -57,35 +57,39 @@ require(['jquery', 'context', 'i18n', 'generis.tree.select', 'helpers'], functio
     var saveurl = <?php echo json_encode(get_data('saveUrl'))?>
 
     new GenerisTreeSelectClass('#item-tree', context.root_url + 'tao/GenerisTree/getData',{
-                actionId: 'item',
-                saveUrl: saveurl,
-                paginate:	10,
-                saveCallback: function (data){
-                        if (buildItemList != undefined) {
-                                newSequence = {};
-                                sequence = [];
-                                for (attr in data) {
-                                        if (/^instance_/.test(attr) && $.inArray(data[attr], sequence) == -1 && attr != undefined) {
-                                                newSequence[parseInt(attr.replace('instance_', ''))+1] = 'item_'+ data[attr];
-                                                sequence[parseInt(attr.replace('instance_', ''))+1] =  data[attr];
-                                        }
-                                }
-                                buildItemList("item-sequence", newSequence, labels);
-                                if ($('#item-sequence li').length) $('#item-sequence').prev('.elt-info').show();
-                                else $('#item-sequence').prev('.elt-info').hide();
+            actionId: 'item',
+            saveUrl: saveurl,
+            paginate:	10,
+            saveCallback: function (data){
+                if (buildItemList != undefined) {
+                    newSequence = {};
+                    sequence = [];
+                    var uris = jQuery.parseJSON(data["instances"]);
+                    for (attr in uris) {
+                        if ($.inArray(uris[attr], sequence) == -1 && attr != undefined) {
+                            newSequence[parseInt(attr.replace('instance_', ''))+1] = 'item_'+ uris[attr];
+                            sequence[parseInt(attr.replace('instance_', ''))+1] =  uris[attr];
                         }
-                },
-                checkedNodes : sequence,
-                serverParameters: {
-                        openNodes: <?=json_encode(get_data('itemOpenNodes'))?>,
-                        rootNode: <?=json_encode(get_data('itemRootNode'))?>
-                },
-                callback: {
-                        checkPaginate: function(NODE, TREE_OBJ) {
-                                //Check the unchecked that must be checked... olè!
-                                this.check(sequence);
-                        }
+                    }
+                    buildItemList("item-sequence", newSequence, labels);
+                    if ($('#item-sequence li').length) {
+                        $('#item-sequence').prev('.elt-info').show();
+                    } else {
+                        $('#item-sequence').prev('.elt-info').hide();
+                    }
                 }
+            },
+            checkedNodes : sequence,
+            serverParameters: {
+                    openNodes: <?=json_encode(get_data('itemOpenNodes'))?>,
+                    rootNode: <?=json_encode(get_data('itemRootNode'))?>
+            },
+            callback: {
+                    checkPaginate: function(NODE, TREE_OBJ) {
+                            //Check the unchecked that must be checked... olè!
+                            this.check(sequence);
+                    }
+            }
         });
         
         $("#item-sequence").sortable({
