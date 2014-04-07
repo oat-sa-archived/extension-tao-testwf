@@ -40,29 +40,35 @@ class taoWfTest_models_classes_WfTestCompiler extends taoTests_models_classes_Te
         $test = $this->getResource();
         common_Logger::i('Compiling test ' . $test->getLabel().' items');
         $process = $test->getUniquePropertyValue(new core_kernel_classes_Property(TEST_TESTCONTENT_PROP));
+        
+        if (count(wfEngine_models_classes_ProcessDefinitionService::singleton()->getAllActivities($process)) == 0) {
+            return new common_report_Report(common_report_Report::TYPE_ERROR,__('An empty test cannot be published.'));
+        }
+        
         $processCloner = new wfAuthoring_models_classes_ProcessCloner();
         try {
             $processClone = $processCloner->cloneProcess($process);
             $report->add(new common_report_Report(common_report_Report::TYPE_SUCCESS,__('Cloned the process %s', $process->getLabel())));
+        
+            $itemsServiceReport = $this->process($processClone);
+            foreach ($itemsServiceReport as $subReport) {
+                $report->add($subReport);
+            }
+            
+            if ($itemsServiceReport->getType() == common_report_Report::TYPE_SUCCESS) {
+                $serviceCall = new tao_models_classes_service_ServiceCall(new core_kernel_classes_Resource(INSTANCE_SERVICE_PROCESSRUNNER));
+                $param = new tao_models_classes_service_ConstantParameter(new core_kernel_classes_Resource(INSTANCE_FORMALPARAM_PROCESSDEFINITION), $processClone->getUri());
+                $serviceCall->addInParameter($param);
+                
+                $report->setData($serviceCall);
+            } else {
+                $report->setType(common_report_Report::TYPE_ERROR);
+            }
         } catch (common_Exception $e) {
             $report->add(new common_report_Report(common_report_Report::TYPE_ERROR,__('Failed to clone the process')));
             $report->setType(common_report_Report::TYPE_ERROR);
         }
         
-        $itemsServiceReport = $this->process($processClone);
-        foreach ($itemsServiceReport as $subReport) {
-            $report->add($subReport);
-        }
-        
-        if ($itemsServiceReport->getType() == common_report_Report::TYPE_SUCCESS) {
-            $serviceCall = new tao_models_classes_service_ServiceCall(new core_kernel_classes_Resource(INSTANCE_SERVICE_PROCESSRUNNER));
-            $param = new tao_models_classes_service_ConstantParameter(new core_kernel_classes_Resource(INSTANCE_FORMALPARAM_PROCESSDEFINITION), $processClone->getUri());
-            $serviceCall->addInParameter($param);
-            
-            $report->setData($serviceCall);
-        } else {
-            $report->setType(common_report_Report::TYPE_ERROR);
-        }
 
         if ($report->getType() != common_report_Report::TYPE_SUCCESS) {
             $report->setMessage(__('Failed to publish test "%s".' , $this->getResource()->getLabel()));
