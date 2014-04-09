@@ -60,8 +60,14 @@ class taoWfTest_actions_Authoring extends tao_actions_SaSModule {
 		}
 		$saved = false;
 
+        $candidates = tao_helpers_form_GenerisTreeForm::getSelectedInstancesFromPost();
+		foreach($this->getRequestParameters() as $key => $value) {
+		    if(preg_match("/^instance_/", $key)){
+		        $candidates[] = tao_helpers_Uri::decode($value);
+		    }
+		}
 		$items = array();
-		foreach(tao_helpers_form_GenerisTreeForm::getSelectedInstancesFromPost() as $uri){
+		foreach($candidates as $uri){
 			$item = new core_kernel_classes_Resource($uri);
 			$itemModel = $item->getOnePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
 			$supported = false;
