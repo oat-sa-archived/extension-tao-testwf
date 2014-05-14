@@ -269,7 +269,7 @@ class taoWfTest_models_classes_WfTestService extends taoTests_models_classes_Tes
             $previousActivity = $activity;
         }
         $returnValue = true;
-        // section 10-13-1-39-7cf56b28:12c53e4afe8:-8000:0000000000002C08 end
+        
         
         return (bool) $returnValue;
     }
