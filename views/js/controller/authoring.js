@@ -1,7 +1,15 @@
 /**
  * @author Bertrand Chevrier <bertrand@taotesting.com>
  */
-define(['module', 'jquery', 'lodash', 'i18n', 'generis.tree.select', 'helpers'], function(module, $, _, __, GenerisTreeSelectClass, helpers) {
+define([
+    'module', 
+    'jquery', 
+    'lodash', 
+    'i18n', 
+    'generis.tree.select', 
+    'helpers', 
+    'ui/feedback'
+],  function(module, $, _, __, GenerisTreeSelectClass, helpers, feedback) {
     
     /**
      * Wf test authoring controller
@@ -18,7 +26,6 @@ define(['module', 'jquery', 'lodash', 'i18n', 'generis.tree.select', 'helpers'],
             var self = this;
 
             var $sequenceContainer = $('#item-sequence');
-            var $sequenceInfo = $('#item-sequence').prev('.elt-info');
 
             options = _.merge(module.config(), options || {});
             var sequence = options.sequence || [];
@@ -40,11 +47,6 @@ define(['module', 'jquery', 'lodash', 'i18n', 'generis.tree.select', 'helpers'],
                         }
                     }
                     self._buildItemList($sequenceContainer, newSequence, labels);
-                    if ($('li', $sequenceContainer).length) {
-                        $sequenceInfo.show();
-                    } else {
-                        $sequenceInfo.hide();
-                    }
                 },
                 checkedNodes : sequence,
                 serverParameters: {
@@ -58,11 +60,23 @@ define(['module', 'jquery', 'lodash', 'i18n', 'generis.tree.select', 'helpers'],
                     }
                 }
             });
-            
+
+            //TODO use propert css classes            
+            $sequenceContainer
+              .on('mouseover', 'li', function(){
+                $(this).css('cursor', 'grab');
+            })
+              .on('mousedown', 'li', function(){
+                $(this).css('cursor', 'grabbing');
+            })
+              .on('mouseup', 'li', function(){
+                $(this).css('cursor', 'pointer');
+            });
+
             $sequenceContainer.sortable({
                 axis: 'y',
                 opacity: 0.6,
-                placeholder: 'ui-state-error',
+                placeholder: 'placeholder',
                 tolerance: 'pointer',
                 update: function(event, ui){
                     var index;
@@ -79,21 +93,15 @@ define(['module', 'jquery', 'lodash', 'i18n', 'generis.tree.select', 'helpers'],
                 }
             });
 
-            $sequenceContainer
-              .on('mousedown', 'li', function(){
-                $(this).css('cursor', 'move');
-            })
-              .on('mouseup', 'li', function(){
-                $(this).css('cursor', 'pointer');
-            });
-
-            $("#saver-action-item-sequence").click(function(){
+            $(".sequence-container .saver").click(function(){
                 var toSend = {};
                 for(var index in sequence){
                     toSend['instance_'+index] = sequence[index];
                 }
+
                 toSend.uri = $("input[name=uri]").val();
                 toSend.classUri = $("input[name=classUri]").val();
+
                 $.ajax({
                     url: options.saveurl,
                     type: "POST",
@@ -101,7 +109,7 @@ define(['module', 'jquery', 'lodash', 'i18n', 'generis.tree.select', 'helpers'],
                     dataType: 'json',
                     success: function(response){
                             if (response.saved) {
-                                helpers.createInfoMessage(__('Sequence saved successfully'));
+                                feedback().success(__('Sequence saved successfully'));
                             }
                     },
                     complete: function(){
@@ -115,11 +123,10 @@ define(['module', 'jquery', 'lodash', 'i18n', 'generis.tree.select', 'helpers'],
             var html = '';
             var itemId;
             for (var i in items) {
-                    itemId = items[i];
-                    html += "<li class='ui-state-default' id='" + itemId + "' >";
-                    html += "<span class='ui-icon ui-icon-arrowthick-2-n-s' /><span class='ui-icon ui-icon-grip-dotted-vertical' />";
-                    html += i + ". " + labels[itemId];
-                    html += "</li>";
+                itemId = items[i];
+                html += "<li class='ui-state-default' id='" + itemId + "' >";
+                html += i + ". " + labels[itemId];
+                html += "</li>";
             }
             $container.html(html);
         }
