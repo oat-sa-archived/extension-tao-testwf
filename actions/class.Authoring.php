@@ -49,6 +49,47 @@ class taoWfTest_actions_Authoring extends tao_actions_SaSModule {
 		$this->service = taoWfTest_models_classes_WfTestService::singleton();
 	}
 
+    /**
+     * Renders the auhtoring for simple tests
+     */
+	public function index(){
+
+        $test = $this->getCurrentInstance();
+
+    	$itemSequence = array();
+		$itemUris = array();
+		$counter = 1;
+		foreach($this->service->getTestItems($test) as $item){
+			$itemUris[] = $item->getUri();
+			$itemSequence[$counter] = array(
+				'uri' 	=> tao_helpers_Uri::encode($item->getUri()),
+				'label' => $item->getLabel()
+			);
+			$counter++;
+		}
+
+		// data for item sequence, terrible solution
+		// @todo implement an ajax request for labels or pass from tree to sequence
+		$allItems = array();
+		foreach($this->service->getAllItems() as $itemUri => $itemLabel){
+			$allItems['item_'.tao_helpers_Uri::encode($itemUri)] = $itemLabel;
+		}
+		
+		$this->setData('uri', $test->getUri());
+    	$this->setData('allItems', json_encode($allItems));
+		$this->setData('itemSequence', $itemSequence);
+		
+		// data for generis tree form
+		$this->setData('relatedItems', json_encode(tao_helpers_Uri::encodeArray($itemUris)));
+
+		$openNodes = tao_models_classes_GenerisTreeFactory::getNodesToOpen($itemUris, new core_kernel_classes_Class(TAO_ITEM_CLASS));
+		$this->setData('itemRootNode', TAO_ITEM_CLASS);
+		$this->setData('itemOpenNodes', $openNodes);
+		$this->setData('saveUrl', _url('saveItems', 'Authoring', 'taoWfTest'));
+
+        $this->setView('authoring.tpl');
+    }
+
 	/**
 	 * save the related items from the checkbox tree or from the sequence box
 	 * @return void
@@ -88,7 +129,7 @@ class taoWfTest_actions_Authoring extends tao_actions_SaSModule {
 		if($this->service->setTestItems($this->getCurrentInstance(), $items)){
 			$saved = true;
 		}
-		echo json_encode(array('saved'	=> $saved));
+		$this->returnJson(array('saved'	=> $saved));
 	}
 
 }
