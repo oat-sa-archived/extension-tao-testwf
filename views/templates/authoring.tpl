@@ -19,13 +19,13 @@
 		<div id="item-list">
 			<span class="elt-info" <?php if (!count(get_data('itemSequence'))) echo ' style="display:none"' ?>><?=__('Drag and drop the items to order them')?></span>
 			<ul id="item-sequence" class="sortable-list">
-			<?foreach(get_data('itemSequence') as $index => $item):?>
+			<?php foreach(get_data('itemSequence') as $index => $item):?>
 				<li class="ui-state-default" id="item_<?=$item['uri']?>" >
 					<span class='ui-icon ui-icon-arrowthick-2-n-s' ></span>
 					<span class="ui-icon ui-icon-grip-dotted-vertical" ></span>
 					<?=$index?>. <?=$item['label']?>
 				</li>
-			<?endforeach?>
+			<?php endforeach?>
 			</ul>
 		</div>
 	</div>
