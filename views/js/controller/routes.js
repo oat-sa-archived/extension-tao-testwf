@@ -23,5 +23,10 @@ define(function(){
     'use strict';
 
     return {
+        'Authoring' : {
+            'actions' : {
+                'index' : 'controller/authoring'
+            }
+        }
     };
 });

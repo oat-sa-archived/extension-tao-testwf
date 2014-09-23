@@ -44,16 +44,15 @@
 </div>
 
 <script type="text/javascript">
-//manual require because of  the redirect
-require(['taoWfTest/controller/authoring'], function(controller){
-    'use strict';
-
-    controller.start({
-        sequence    : <?=get_data('relatedItems')?>,
-        labels      : <?=get_data('allItems')?>,
-        saveurl     : <?=json_encode(get_data('saveUrl'))?>,
-        openNodes   : <?=json_encode(get_data('itemOpenNodes'))?>,
-        rootNode    : <?=json_encode(get_data('itemRootNode'))?>
-    });
+requirejs.config({
+    config: {
+        'taoWfTest/controller/authoring' : {
+            sequence    : <?=get_data('relatedItems')?>,
+            labels      : <?=get_data('allItems')?>,
+            saveurl     : <?=json_encode(get_data('saveUrl'))?>,
+            openNodes   : <?=json_encode(get_data('itemOpenNodes'))?>,
+            rootNode    : <?=json_encode(get_data('itemRootNode'))?>
+        }
+    }
 });
 </script>
