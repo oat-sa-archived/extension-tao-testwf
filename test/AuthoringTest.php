@@ -22,6 +22,12 @@
 namespace oat\taoWfTest\test;
 
 use oat\tao\test\TaoPhpUnitTestRunner;
+use \taoTests_models_classes_TestsService;
+use \core_kernel_classes_Class;
+use \core_kernel_classes_Resource;
+use \common_Utils;
+
+
 include_once dirname(__FILE__) . '/../includes/raw_start.php';
 
 /**
