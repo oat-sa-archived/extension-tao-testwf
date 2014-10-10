@@ -22,7 +22,7 @@
 namespace oat\taoWfTest\test;
 
 use oat\tao\test\TaoPhpUnitTestRunner;
-use \taoTests_models_classes_TestsService;
+use \taoWfTest_models_classes_WfTestService;
 use \core_kernel_classes_Class;
 use \core_kernel_classes_Resource;
 use \common_Utils;
@@ -48,7 +48,7 @@ class AuthoringTestCase extends TaoPhpUnitTestRunner {
 	 */
 	public function setUp(){		
 		TaoPhpUnitTestRunner::initTest();
-		$this->testsService = taoTests_models_classes_TestsService::singleton();
+		$this->testsService = taoWfTest_models_classes_WfTestService::singleton();
 	}
 
 	/**
@@ -148,7 +148,8 @@ class AuthoringTestCase extends TaoPhpUnitTestRunner {
      * @return void
      */
     public function testInstanceClone($testInstance) {
-        $clone = $this->testsService->cloneInstance($testInstance);
+        $rootClass = $this->testsService->getRootClass();
+        $clone = $this->testsService->cloneInstance($testInstance,$rootClass);
 		$this->assertIsA($clone, 'core_kernel_classes_Resource');
         $this->assertTrue($clone->exists());
         $this->assertNotEquals($testInstance->getUri(), $clone->getUri());
