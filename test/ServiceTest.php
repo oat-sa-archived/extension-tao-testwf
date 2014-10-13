@@ -23,7 +23,8 @@ namespace oat\taoWfTest\test;
 
 use oat\tao\test\TaoPhpUnitTestRunner;
 use \taoWfTest_models_classes_WfTestService;
-include_once dirname(__FILE__) . '/../includes/raw_start.php';
+use \core_kernel_classes_Property;
+
 
 /**
  *
@@ -31,7 +32,7 @@ include_once dirname(__FILE__) . '/../includes/raw_start.php';
  * @package taoTests
  
  */
-class ServiceTestCase extends TaoPhpUnitTestRunner {
+class ServiceTest extends TaoPhpUnitTestRunner {
 
 	/**
 	 * @var taoTests_models_classes_TestsService
@@ -73,6 +74,24 @@ class ServiceTestCase extends TaoPhpUnitTestRunner {
         return $testInstance;
 	}
 
+	/**
+	 *
+	 * @author Lionel Lecaque, lionel@taotesting.com
+	 * @param string $uri
+	 * @return PHPUnit_Framework_MockObject_MockObject
+	 */
+	private function getResourceMock($uri)
+	{
+	    $resourceMock = $this->getMockBuilder('core_kernel_classes_Resource')
+	    ->setMockClassName('FakeResource')
+	    ->setConstructorArgs(array(
+	        $uri
+	    ))
+	    ->getMock();
+	
+	    return $resourceMock;
+	}
+	
     /**
      * test SetTestItems and GetTestItems
      * @depends testInstanceCreate
@@ -80,16 +99,33 @@ class ServiceTestCase extends TaoPhpUnitTestRunner {
      * @return void
      */
     public function testSetTestItems($testInstance) {
-		$item = $this->wftService->createInstance($this->wftService->getRootclass(), 'WfTestItem');
+		$item = $this->getResourceMock('http://localhost/test.rdf#fakeItem1Uri');
+		$item->expects($this->once())
+		->method('getLabel')
+		->will($this->returnValue('fakeItemLabel'));
+		
+		$item->expects($this->once())
+		->method('getUri')
+		->will($this->returnValue('http://test.rdf#fakeItem1Uri'));
+		
+		$item2 = $this->getResourceMock('http://test.rdf#fakeItem2Uri');
+		$item2->expects($this->once())
+		->method('getLabel')
+		->will($this->returnValue('fakeItemLabel2'));
+		
+		$item2->expects($this->once())
+		->method('getUri')
+		->will($this->returnValue('http://test.rdf#fakeItem2Uri'));
+		
 
-		$this->assertIsA($item, 'core_kernel_classes_Resource');
-        $this->assertEquals('WfTestItem', $item->getLabel());
-        $this->assertTrue($item->exists());
-
-        $this->assertTrue($this->wftService->setTestItems($testInstance, array($item)));
-        $this->assertEquals(1, count($this->wftService->getTestItems($testInstance)));
-		$this->assertTrue($item->delete());
-		$this->assertFalse($item->exists());
+        $this->assertTrue($this->wftService->setTestItems($testInstance, array($item,$item2)));
+        $tests = $this->wftService->getTestItems($testInstance);
+        $this->assertEquals(2, count($tests));
+        
+        $this->assertInstanceOf('core_kernel_classes_Resource',current($tests));
+        $this->assertEquals('http://test.rdf#fakeItem1Uri',current($tests)->getUri());
+        $this->assertInstanceOf('core_kernel_classes_Resource',next($tests));
+        $this->assertEquals('http://test.rdf#fakeItem2Uri',current($tests)->getUri());
     }
 
     /**
@@ -140,6 +176,7 @@ class ServiceTestCase extends TaoPhpUnitTestRunner {
         $duplicate->delete();
     }
 
+    
     /**
      * test deleteTest
      * @depends testInstanceCreate
@@ -151,5 +188,7 @@ class ServiceTestCase extends TaoPhpUnitTestRunner {
         $this->wftService->deleteTest($testInstance);
 		$this->assertFalse($testInstance->exists());
     }
+    
+
 
 }

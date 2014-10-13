@@ -25,6 +25,7 @@ use oat\tao\test\TaoPhpUnitTestRunner;
 use \taoWfTest_models_classes_WfTestService;
 use \core_kernel_classes_Class;
 use \core_kernel_classes_Resource;
+use \core_kernel_classes_Property;
 use \common_Utils;
 
 
@@ -149,11 +150,18 @@ class AuthoringTestCase extends TaoPhpUnitTestRunner {
      */
     public function testInstanceClone($testInstance) {
         $rootClass = $this->testsService->getRootClass();
+        $testInstance->setLabel('toto bis');
         $clone = $this->testsService->cloneInstance($testInstance,$rootClass);
-		$this->assertIsA($clone, 'core_kernel_classes_Resource');
+		$this->assertInstanceOf( 'core_kernel_classes_Resource',$clone);
         $this->assertTrue($clone->exists());
         $this->assertNotEquals($testInstance->getUri(), $clone->getUri());
-
+        $propInstanceContent = new core_kernel_classes_Property(TEST_TESTCONTENT_PROP);
+        $testContent = $testInstance->getUniquePropertyValue($propInstanceContent);
+        $cloneContent = $testInstance->getUniquePropertyValue($propInstanceContent);
+        $this->assertInstanceOf( 'core_kernel_classes_Resource',$testContent);
+        $this->assertInstanceOf( 'core_kernel_classes_Resource',$cloneContent);
+        $this->assertEquals($testContent->getUri(),$cloneContent->getUri());
+        
         $clone->delete();
     }
 
