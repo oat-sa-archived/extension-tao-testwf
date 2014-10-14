@@ -18,7 +18,17 @@
  *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
  * 
  */
+
+namespace oat\taoWfTest\test;
+
 use oat\tao\test\TaoPhpUnitTestRunner;
+use \taoWfTest_models_classes_WfTestService;
+use \core_kernel_classes_Class;
+use \core_kernel_classes_Resource;
+use \core_kernel_classes_Property;
+use \common_Utils;
+
+
 include_once dirname(__FILE__) . '/../includes/raw_start.php';
 
 /**
