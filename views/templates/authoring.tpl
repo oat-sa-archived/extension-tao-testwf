@@ -1,4 +1,4 @@
-<div id="wf-test-editor">
+<div id="wf-test-editor" class="data-container-wrapper flex-container-full">
     
     <!-- is this field still required? -->
     <input type='hidden' name='uri' value="<?=get_data('uri')?>" />

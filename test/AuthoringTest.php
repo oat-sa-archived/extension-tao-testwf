@@ -1,5 +1,5 @@
 <?php
-/**
+/*  
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
@@ -38,153 +38,62 @@ include_once dirname(__FILE__) . '/../includes/raw_start.php';
  
  */
 class AuthoringTestCase extends TaoPhpUnitTestRunner {
-
+	
 	/**
+	 * 
 	 * @var taoTests_models_classes_TestsService
 	 */
 	protected $testsService = null;
-
+	
 	/**
 	 * tests initialization
 	 */
 	public function setUp(){		
 		TaoPhpUnitTestRunner::initTest();
-		$this->testsService = taoWfTest_models_classes_WfTestService::singleton();
+		$this->testsService = taoTests_models_classes_TestsService::singleton();
 	}
-
+	
 	/**
 	 * Test the user service implementation
 	 * @see tao_models_classes_ServiceFactory::get
 	 * @see taoTests_models_classes_TestsService::__construct
 	 */
 	public function testService(){
+		
+
 		$this->assertIsA($this->testsService, 'tao_models_classes_Service');
 		$this->assertIsA($this->testsService, 'taoTests_models_classes_TestsService');
-	}
 
-    /**
-     * test create instance
-     * @return \core_kernel_classes_Resource
-     */
-	public function testInstanceCreate() {
+	}
+	
+	/**
+	 * Usual CRUD (Create Read Update Delete) on the test class  
+	 */
+	public function testAuthoring(){
+		
 	    $testClass = new core_kernel_classes_Class(TAO_TEST_CLASS);
 		$testInstance = $this->testsService->createInstance($testClass, 'unittest test');
 		$this->assertIsA($testInstance, 'core_kernel_classes_Resource');
-		$this->assertTrue($testInstance->exists());
 
-		$type = current($testInstance->getTypes());
-		$this->assertEquals(TAO_TEST_CLASS, $type->getUri());
-
-        return $testInstance;
-	}
-
-    /**
-     * test model instance
-     * testmodel associated by random, not tested here
-     * @depends testInstanceCreate
-     * @param $testInstance
-     * @return void
-     */
-    public function testModelInstance($testInstance) {
+		// testmodel associated by random, not tested here
+		
 		$modelInstance = new core_kernel_classes_Resource('http://www.tao.lu/Ontologies/TAOTest.rdf#SimpleTestModel');
 		$this->testsService->setTestModel($testInstance, $modelInstance);
-
+		
 		$testModel = $this->testsService->getTestModel($testInstance);
 		$this->assertTrue($modelInstance->equals($testModel));
-    }
-
-    /**
-     * test duplicate test instance
-     * @depends testInstanceCreate
-     * @param \core_kernel_classes_Resource $testInstance
-     * @return void
-     */
-	public function testInstanceDuplicate($testInstance){
-        $duplicate = $testInstance->duplicate();
-        $this->assertTrue($duplicate->exists());
-        $this->assertNotEquals($testInstance->getUri(), $duplicate->getUri());
-        $this->assertEquals('unittest test', $duplicate->getLabel());
-
-        $duplicate->delete();
-    }
-
-    /**
-     * test instance setPropertyValue
-     * @depends testInstanceCreate
-     * @param \core_kernel_classes_Resource $testInstance
-     * @return \core_kernel_classes_Property
-     */
-	public function testInstancePropertyCreate($testInstance){
-        $prop = $this->testsService->getRootclass()->createProperty(
-            'ResourceTestCaseProperty ' . common_Utils::getNewUri()
-        );
-        $testInstance->setPropertyValue($prop, 'wfAuthoringTestCase');
-        $props = $testInstance->getPropertiesValues(array($prop));
-        $this->assertTrue(in_array('wfAuthoringTestCase', $props[$prop->getUri()]));
-
-        return $prop;
-    }
-
-    /**
-     * test instance property delete
-     * @depends testInstanceCreate
-     * @depends testInstancePropertyCreate
-     * @param \core_kernel_classes_Resource $testInstance
-     * @param \core_kernel_classes_Property $prop
-     * @return void
-     */
-	public function testInstancePropertyDelete($testInstance, $prop) {
-        $prop->delete();
-        $this->assertFalse($prop->exists());
-
-        $testInstance->removePropertyValues($prop);
-        $props = $testInstance->getPropertiesValues(array($prop));
-        $this->assertFalse(in_array('wfAuthoringTestCase', $props[$prop->getUri()]));
-    }
-
-    /**
-     * test clone test instance
-     * @depends testInstanceCreate
-     * @param \core_kernel_classes_Resource $testInstance
-     * @return void
-     */
-    public function testInstanceClone($testInstance) {
-        $rootClass = $this->testsService->getRootClass();
-        $testInstance->setLabel('toto bis');
-        $clone = $this->testsService->cloneInstance($testInstance,$rootClass);
-		$this->assertInstanceOf( 'core_kernel_classes_Resource',$clone);
-        $this->assertTrue($clone->exists());
-        $this->assertNotEquals($testInstance->getUri(), $clone->getUri());
-        $propInstanceContent = new core_kernel_classes_Property(TEST_TESTCONTENT_PROP);
-        $testContent = $testInstance->getUniquePropertyValue($propInstanceContent);
-        $cloneContent = $testInstance->getUniquePropertyValue($propInstanceContent);
-        $this->assertInstanceOf( 'core_kernel_classes_Resource',$testContent);
-        $this->assertInstanceOf( 'core_kernel_classes_Resource',$cloneContent);
-        $this->assertEquals($testContent->getUri(),$cloneContent->getUri());
-        
-        $clone->delete();
-    }
-
-    /**
-     * test getTestItems
-     * @depends testInstanceCreate
-     * @param \core_kernel_classes_Resource $testInstance
-     * @return void
-     */
-    public function testGetTestItems($testInstance) {
-        $items = $this->testsService->getTestItems($testInstance);
-        $this->assertEquals(count($items), 0);
-    }
-
-    /**
-     * test delete test instance
-     * @depends testInstanceCreate
-     * @param \core_kernel_classes_Resource $testInstance
-     * @return void
-     */
-    public function testInstanceDelete($testInstance) {
+		
+		$itemClass = new core_kernel_classes_Class(TAO_ITEM_CLASS);
+		$items = $itemClass->getInstances(true, array('limit' => 3));
+		
+		// only test set Items if items exists
+		if (count($items) == 3) {
+		    
+        }
+		
+		//delete test instance
 		$this->assertTrue($testInstance->delete());
-		$this->assertFalse($testInstance->exists());
-    }
-
+	}
+	
+	
 }
