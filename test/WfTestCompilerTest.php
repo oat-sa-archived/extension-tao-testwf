@@ -30,85 +30,80 @@ use \taoWfTest_models_classes_WfTestCompiler;
 
 class WfTestCompilerTest extends TaoPhpUnitTestRunner
 {
+
     protected $test;
+
     protected $service;
-    
+
     public function setUp()
     {
         common_ext_ExtensionsManager::singleton()->getExtensionById('taoWfTest'); // loads the extension
-    
+        
         TaoPhpUnitTestRunner::initTest();
         $this->service = taoWfTest_models_classes_WfTestService::singleton();
         $this->test = $this->service->createInstance($this->service->getRootclass(), 'taoWfTestUnitCompilerTest');
-        
+    }
 
+    public function tearDown()
+    {
+        $this->test->delete();
     }
-    
-    public function tearDown(){
-            $this->test->delete();
-    }
-    
+
     /**
      *
      * @author Lionel Lecaque, lionel@taotesting.com
-     * @param string $uri
+     * @param string $uri            
      * @return PHPUnit_Framework_MockObject_MockObject
      */
     private function getResourceMock($uri)
     {
         $resourceMock = $this->getMockBuilder('core_kernel_classes_Resource')
-        ->setMockClassName('FakeResource')
-        ->setConstructorArgs(array(
+            ->setMockClassName('FakeResource')
+            ->setConstructorArgs(array(
             $uri
         ))
-        ->getMock();
-    
+            ->getMock();
+        
         return $resourceMock;
     }
-    
+
+    /**
+     *
+     * @author Lionel Lecaque, lionel@taotesting.com
+     */
     public function testCompile()
     {
         $item = $this->getResourceMock('http://localhost/test.rdf#fakeItem1Uri');
         $item->expects($this->once())
-        ->method('getLabel')
-        ->will($this->returnValue('fakeItemLabel'));
+            ->method('getLabel')
+            ->will($this->returnValue('fakeItemLabel'));
         
         $item->expects($this->once())
-        ->method('getUri')
-        ->will($this->returnValue('http://test.rdf#fakeItem1Uri'));
+            ->method('getUri')
+            ->will($this->returnValue('http://test.rdf#fakeItem1Uri'));
         
         $item2 = $this->getResourceMock('http://test.rdf#fakeItem2Uri');
         $item2->expects($this->once())
-        ->method('getLabel')
-        ->will($this->returnValue('fakeItemLabel2'));
+            ->method('getLabel')
+            ->will($this->returnValue('fakeItemLabel2'));
         
         $item2->expects($this->once())
-        ->method('getUri')
-        ->will($this->returnValue('http://test.rdf#fakeItem2Uri'));
+            ->method('getUri')
+            ->will($this->returnValue('http://test.rdf#fakeItem2Uri'));
         
-        $this->assertTrue($this->service->setTestItems($this->test, array($item,$item2)));
+        $this->assertTrue($this->service->setTestItems($this->test, array(
+            $item,
+            $item2
+        )));
         $storage = tao_models_classes_service_FileStorage::singleton();
-        $compiler = $this->getMockBuilder('taoWfTest_models_classes_WfTestService')
-        ->setMockClassName('FakeCompiler')
-        ->setConstructorArgs(array(
-            $this->test,
-            $storage
-        ))
-        ->getMock();
         
-//         $compiler->expects($this->any())
-//         ->method('subCompile')
-//         ->will($this->returnValue('SUCCESS REPORT'));
-        
-
-//         $compiler = new taoWfTest_models_classes_WfTestCompiler($this->test,$storage);
+        $compiler = new taoWfTest_models_classes_WfTestCompiler($this->test, $storage);
         
         $report = $compiler->compile();
-        $this->assertInstanceOf('common_report_Report',$report);
-        $this->assertEquals(common_report_Report::TYPE_ERROR,$report->getType());
+        $this->assertInstanceOf('common_report_Report', $report);
+        $this->assertEquals(common_report_Report::TYPE_ERROR, $report->getType());
         var_dump($report);
     }
-    
 }
 
 ?>
