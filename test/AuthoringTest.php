@@ -23,6 +23,7 @@ namespace oat\taoWfTest\test;
 
 use oat\tao\test\TaoPhpUnitTestRunner;
 use \taoWfTest_models_classes_WfTestService;
+use \taoTests_models_classes_TestsService;
 use \core_kernel_classes_Class;
 use \core_kernel_classes_Resource;
 use \core_kernel_classes_Property;
