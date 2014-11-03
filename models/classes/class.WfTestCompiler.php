@@ -65,7 +65,6 @@ class taoWfTest_models_classes_WfTestCompiler extends taoTests_models_classes_Te
                 $report->setType(common_report_Report::TYPE_ERROR);
             }
         } catch (common_Exception $e) {
-            var_dump($e);
             $report->add(new common_report_Report(common_report_Report::TYPE_ERROR,__('Failed to clone the process')));
             $report->setType(common_report_Report::TYPE_ERROR);
         }
