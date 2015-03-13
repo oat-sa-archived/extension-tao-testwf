@@ -44,7 +44,8 @@ return array(
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOTest.rdf#WfTestManagerRole',
     'acl' => array(
         array('grant', 'http://www.tao.lu/Ontologies/TAOTest.rdf#WfTestManagerRole', array('ext'=>'taoWfTest')),
-        array('grant', 'http://www.tao.lu/Ontologies/TAOItem.rdf#ItemsManagerRole', array('ext'=>'taoWfTest', 'mod' => 'Authoring')),
+        array('grant', 'http://www.tao.lu/Ontologies/TAOItem.rdf#TestAuthor', array('ext'=>'taoWfTest', 'mod' => 'Authoring')),
+        array('grant', 'http://www.tao.lu/Ontologies/TAOItem.rdf#TestAuthor', array('ext'=>'taoWfTest', 'mod' => 'Items', 'act' => 'getTreeData')),
         array('grant', 'http://www.tao.lu/Ontologies/TAO.rdf#DeliveryRole', array('ext'=>'wfEngine', 'mod' => 'ProcessRunner'))
     ),
 	'constants' => array(
