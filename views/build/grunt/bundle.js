@@ -7,11 +7,12 @@ module.exports = function(grunt) {
     var root        = grunt.option('root');
     var libs        = grunt.option('mainlibs');
     var ext         = require(root + '/tao/views/build/tasks/helpers/extensions')(grunt, root);
+    var out         = 'output';
 
     /**
      * Remove bundled and bundling files
      */
-    clean.taowftestbundle = ['output',  root + '/taoWfTest/views/js/controllers.min.js'];
+    clean.taowftestbundle = [out];
     
     /**
      * Compile tao files into a bundle 
@@ -19,7 +20,7 @@ module.exports = function(grunt) {
     requirejs.taowftestbundle = {
         options: {
             baseUrl : '../js',
-            dir : 'output',
+            dir : out,
             mainConfigFile : './config/requirejs.build.js',
             paths : { 'taoWfTest' : root + '/taoWfTest/views/js' },
             modules : [{
@@ -35,8 +36,8 @@ module.exports = function(grunt) {
      */
     copy.taowftestbundle = {
         files: [
-            { src: ['output/taoWfTest/controller/routes.js'],  dest: root + '/taoWfTest/views/js/controllers.min.js' },
-            { src: ['output/taoWfTest/controller/routes.js.map'],  dest: root + '/taoWfTest/views/js/controllers.min.js.map' }
+            { src: [out + '/taoWfTest/controller/routes.js'],  dest: root + '/taoWfTest/views/js/controllers.min.js' },
+            { src: [out + '/taoWfTest/controller/routes.js.map'],  dest: root + '/taoWfTest/views/js/controllers.min.js.map' }
         ]
     };
 

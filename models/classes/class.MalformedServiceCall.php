@@ -27,7 +27,7 @@
  
  */
 class taoWfTest_models_classes_MalformedServiceCall
-    extends taoDelivery_models_classes_CompilationFailedException
+    extends tao_models_classes_CompilationFailedException
     implements common_exception_UserReadableException
 {
     private $service;
