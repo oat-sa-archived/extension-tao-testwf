@@ -143,4 +143,8 @@ class taoWfTest_models_classes_WfTestModel
     public function getCompilerClass() {
         return 'taoWfTest_models_classes_WfTestCompiler';
     }
+    
+    public function getPackerClass() {
+        throw new common_exception_NotImplemented('getPackerClass not implemented yet.');
+    }
 }
