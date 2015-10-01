@@ -31,7 +31,6 @@ class taoWfTest_actions_Items extends tao_actions_CommonModule {
     /**
 	 * Get the list of items to populate the checkbox tree of related items.
      * It prints to the HTTP response the tree data formated using json.
-	 * @return void
 	 */
 	public function getTreeData() {
 		if($this->hasRequestParameter('classUri')) {
@@ -53,10 +52,9 @@ class taoWfTest_actions_Items extends tao_actions_CommonModule {
 		$limit		    = $this->hasRequestParameter('limit') ? $this->getRequestParameter('limit') : 10;
 		$offset		    = $this->hasRequestParameter('offset') ? $this->getRequestParameter('offset') : 0;
 		$showInst	    = $this->hasRequestParameter('hideInstances') ? !$this->getRequestParameter('hideInstances') : true;
-        $propertyFilter = $this->getTreeFilter();
-		
+
 		$factory = new tao_models_classes_GenerisTreeFactory();
-		$array = $factory->buildTree($class, $showInst, $openNodes, $limit, $offset, $propertyFilter);
+		$array = $factory->buildTree($class, $showInst, $openNodes, $limit, $offset);
 		if ($hideNode) {
 			$array = isset($array['children']) ? $array['children'] : array();
 		}
@@ -64,35 +62,4 @@ class taoWfTest_actions_Items extends tao_actions_CommonModule {
         header('Content-Type : application/json');	
         echo json_encode($array);
 	}
-
-
-    /**
-     * Get filter options of the tree form the HTTP paramters
-     *  - itemModel: filter by item model (or at least ensure a model is defined)
-     * @return $propertyFilter
-     */
-    private function getTreeFilter(){
-        $propertyFilter = array();
-        if ($this->hasRequestParameter('itemModel')) {
-            $propertyFilter = array(
-                TAO_ITEM_MODEL_PROPERTY => tao_helpers_Uri::decode($this->getRequestParameter('itemModel'))
-            );
-        } else {
-
-           //Get all item model values so we ensure the item has a model. 
-           //I know it would be better to be able to filter instances that don't have a model, 
-           //but the API is incomplete 
-            $itemModels = array();
-            $itemModelClass = new core_kernel_classes_Class(TAO_ITEM_MODEL_CLASS); 
-            foreach($itemModelClass->getInstances() as $itemModel){
-                $itemModels[] = $itemModel->getUri(); 
-            }
-            if(!empty($itemModels)){
-                $propertyFilter = array(
-                    TAO_ITEM_MODEL_PROPERTY => $itemModels
-                );
-            }
-        }
-        return $propertyFilter;
-    }
 }
