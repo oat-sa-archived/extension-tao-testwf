@@ -56,8 +56,8 @@ class taoWfTest_actions_Items extends tao_actions_CommonModule {
 		$showInst	    = $this->hasRequestParameter('hideInstances') ? !$this->getRequestParameter('hideInstances') : true;
         $propertyFilter = $this->getTreeFilter();
 		
-		$factory = new GenerisTreeFactory($class, $showInst, $openNodes, $limit, $offset, $propertyFilter);
-		$array = $factory->buildTree();
+		$factory = new GenerisTreeFactory($showInst, $openNodes, $limit, $offset, $propertyFilter);
+		$array = $factory->buildTree($class);
 		if ($hideNode) {
 			$array = isset($array['children']) ? $array['children'] : array();
 		}
