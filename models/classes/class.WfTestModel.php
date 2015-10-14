@@ -17,6 +17,8 @@
  * Copyright (c) 2013-2014 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  * 
  */
+use oat\tao\helpers\TreeHelper;
+use oat\tao\model\GenerisTreeFactory;
 
 /**
  * the wfEngine TestModel
@@ -73,7 +75,7 @@ class taoWfTest_models_classes_WfTestModel
 		
 		// data for generis tree form
 		$widget->setData('relatedItems', json_encode(tao_helpers_Uri::encodeArray($itemUris)));
-		$openNodes = tao_models_classes_GenerisTreeFactory::getNodesToOpen($itemUris, new core_kernel_classes_Class(TAO_ITEM_CLASS));
+		$openNodes = TreeHelper::getNodesToOpen($itemUris, new core_kernel_classes_Class(TAO_ITEM_CLASS));
 		$widget->setData('itemRootNode', TAO_ITEM_CLASS);
 		$widget->setData('itemOpenNodes', $openNodes);
 		$widget->setData('saveUrl', _url('saveItems', 'Authoring', 'taoWfTest'));

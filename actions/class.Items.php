@@ -16,6 +16,7 @@
 *
 * Copyright (c) 2014 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
 */
+use oat\tao\model\GenerisTreeFactory;
 
 /**
  * Actions related to Test's items
@@ -55,8 +56,8 @@ class taoWfTest_actions_Items extends tao_actions_CommonModule {
 		$showInst	    = $this->hasRequestParameter('hideInstances') ? !$this->getRequestParameter('hideInstances') : true;
         $propertyFilter = $this->getTreeFilter();
 		
-		$factory = new tao_models_classes_GenerisTreeFactory();
-		$array = $factory->buildTree($class, $showInst, $openNodes, $limit, $offset, $propertyFilter);
+		$factory = new GenerisTreeFactory($class, $showInst, $openNodes, $limit, $offset, $propertyFilter);
+		$array = $factory->buildTree();
 		if ($hideNode) {
 			$array = isset($array['children']) ? $array['children'] : array();
 		}
