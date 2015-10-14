@@ -18,7 +18,6 @@
  * 
  */
 use oat\tao\helpers\TreeHelper;
-use oat\tao\model\GenerisTreeFactory;
 
 /**
  * the wfEngine TestModel
