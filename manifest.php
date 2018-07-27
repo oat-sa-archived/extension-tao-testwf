@@ -26,7 +26,7 @@ return array(
     'label' => 'Workflow test model',
 	'description' => 'TAO Workflow Test definition',
     'license' => 'GPL-2.0',
-    'version' => '2.5',
+    'version' => '2.6',
 	'author' => 'Open Assessment Technologies',
 	'requires' => array(
         'taoTests' => '>=2.6',
